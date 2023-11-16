@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class DataStorageFoChatId {
     private static final DataStorageFoChatId instance = new DataStorageFoChatId();
-    private final Map<String, Long> infoAboutUser = new HashMap<>();
+    private static final Map<String, Long> infoAboutUser = new HashMap<>();
 
     private DataStorageFoChatId() {
     }

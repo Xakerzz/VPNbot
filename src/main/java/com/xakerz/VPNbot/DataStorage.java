@@ -1,11 +1,54 @@
 package com.xakerz.VPNbot;
 
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DataStorage {
     private static final DataStorage instance = new DataStorage();
-    private final Map<Long, String> infoAboutUser = new HashMap<>();
+    private static final Map<Long, String> infoAboutUser = new HashMap<>();
+    private static final String CHAT_ID_BASE = "src/main/resources/Files/DataBase.txt";
+
+    public static void putChatIdToFile(Long chatId, String userNameFirstName) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(CHAT_ID_BASE, true))) {
+
+            writer.println(chatId + "   " + userNameFirstName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setHashMapChatId() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(CHAT_ID_BASE))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("   ", 3);
+
+                if (parts.length == 3) {
+                    try {
+                        long chatId = Long.parseLong(parts[0]);
+                        String userName = parts[1];
+                        String firstName = parts[2];
+                        DataStorage.infoAboutUser.put(chatId, userName + "   " + firstName);
+                        DataStorageFoChatId.getInstance().setChatId(userName + "   " + firstName, chatId);
+
+
+                    } catch (NumberFormatException e) {
+                        System.err.println("Ошибка преобразования числа: " + e.getMessage());
+                    }
+
+                }
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private DataStorage() {
     }
@@ -16,6 +59,7 @@ public class DataStorage {
 
     public void setInfoAboutUser(long chatId, String userNameFirstName) {
         infoAboutUser.put(chatId, userNameFirstName);
+        putChatIdToFile(chatId, userNameFirstName);
     }
 
     public String getInfoAboutUser(long chatId) {
@@ -26,7 +70,7 @@ public class DataStorage {
         infoAboutUser.remove(chatId);
     }
 
-    public String getCountUsers () {
-        return String.valueOf(infoAboutUser.size());
+    public int getCountUsers() {
+        return infoAboutUser.size();
     }
 }

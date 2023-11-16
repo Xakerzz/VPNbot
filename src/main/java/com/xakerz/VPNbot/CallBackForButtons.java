@@ -5,7 +5,7 @@ public enum CallBackForButtons {
     ABOUT_VPN ("aboutVPN"),
     SUBSCRIPTION_FOR_VPN ("subForVPN"),
     SUBSCRIPTION_FOR_VPN_FROM_ABOUT_VPN ("sub_fom_about_vpn"),
-    BACK_TO_MAIN_MENU ("backToMainMenu"),
+    BACK_TO_MAIN_MENU ("back_To_Main_Menu"),
     BACK_TO_ABOUT_VPN ("back_to_about_vpn"),
     ONE_MONTH ("one_month"),
     THREE_MONTHS ("three_month"),
@@ -20,6 +20,9 @@ public enum CallBackForButtons {
     PAY_FOR_OWN_SERVER ("pay_for_own_server"),
 
     PAID_FOR_ONE_MONTH ("paid_for_one_month"),
+    PAID_FOR_THREE_MONTHS ("paid_for_three_months"),
+    PAID_FOR_SIX_MONTHS ("paid_for_six_months"),
+    PAID_FOR_TWELVE_MONTHS ("paid_for_twelve_months"),
     SUCCESS ("success"),
     NOT_SUCCESS ("not_success");
 

@@ -13,7 +13,10 @@ public enum BotLogs {
     ENTER_IN_THE_TWELVE_MONTHS_SUB ("\nВыбрал подписку на 12 месяцев"),
     ENTER_IN_GET_OWN_SERVER_MENU ("\nВ заказе заказа своего сервера"),
     BACK_TO_SUB_MENU_FROM_MONTH_MENU ("\nВернулся в раздел подписок из выбранной подписки"),
-    PRESS_PAY_BUTTON_ONE_MONTH ("\nНажал кнопку оплаты подписки на один месяц");
+    PRESS_PAY_BUTTON_ONE_MONTH ("\nНажал кнопку оплаты подписки на 1 месяц"),
+    PRESS_PAY_BUTTON_THREE_MONTHS ("\nНажал кнопку оплаты подписки на 3 месяца"),
+    PRESS_PAY_BUTTON_SIX_MONTHS ("\nНажал кнопку оплаты подписки на 6 месяцев"),
+    PRESS_PAY_BUTTON_TWELVE_MONTHS ("\nНажал кнопку оплаты подписки на 12 месяцев");
 
     private String title;
 
