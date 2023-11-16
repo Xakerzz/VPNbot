@@ -1,21 +1,25 @@
 package com.xakerz.VPNbot;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.pinnedmessages.PinChatMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+
+import static org.telegram.telegrambots.meta.api.objects.File.getFileUrl;
 
 
 @SpringBootApplication
@@ -321,6 +325,8 @@ public class VpNbotApplication extends TelegramLongPollingBot {
                         CallBackForButtons.NOT_SUCCESS.getCallBack() + "   " + DataStorage.getInstance().getInfoAboutUser(getChatId()),
                         CallBackForButtons.SUCCESS.getCallBack() + "   " + DataStorage.getInstance().getInfoAboutUser(getChatId()));
 
+                StatusPayment.getInstance().setStatusPayment(getChatId(), true);
+
                 sendTextMessage(BotConfig.getCHAT_ID_CHANEL(), DataStorage.getInstance().getInfoAboutUser(getChatId()) +
                         BotLogs.PRESS_PAY_BUTTON_TWELVE_MONTHS.getBotLog());
 
@@ -341,6 +347,26 @@ public class VpNbotApplication extends TelegramLongPollingBot {
             }
 
         }
+
+        if (update.hasMessage() && update.getMessage().hasPhoto() && StatusPayment.getInstance().getStatusPayment(update.getMessage().getChatId())) {
+
+            Message message = update.getMessage();
+            List<PhotoSize> photos = message.getPhoto();
+
+
+            PhotoSize photo = photos.stream()
+                    .max(Comparator.comparing(PhotoSize::getFileSize))
+                    .orElse(null);
+
+            if (photo != null) {
+                String fileId = photos.get(photos.size() - 1).getFileId();
+
+                sendPhotoMessage(BotConfig.getCHAT_ID_PAYMENT_CHANEL(), fileId);
+                StatusPayment.getInstance().setStatusPayment(update.getMessage().getChatId(), false);
+            }
+        }
+
+
     }
 
 
@@ -394,6 +420,7 @@ public class VpNbotApplication extends TelegramLongPollingBot {
             throw new RuntimeException(e);
         }
     }
+
 
     private void editMessageText(Long chatId, Integer messageId, String newTextForMessage, String newTextForButtonOne, String newTextForButtonTwo, String newTextForCallbackOne, String newTextForCallbackTwo) {
 
