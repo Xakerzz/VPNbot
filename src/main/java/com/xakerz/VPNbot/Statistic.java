@@ -19,7 +19,11 @@ public class Statistic {
     static private int pressPaidTwelveMonthsButton;
     static private int successPaymentCounter;
     static private int notSuccessPaymentCounter;
+    static private int amountKeys;
 
+    public static int getAmountKeys() {
+        return amountKeys = KeysVPN.getAmountListKeys();
+    }
 
     public static int getAmountUsers() {
         return DataStorage.getInstance().getCountUsers();
@@ -158,25 +162,27 @@ public class Statistic {
     }
 
     public String toString() {
-        return String.format("Всего входов в бота: %d\n" +
-                        "Количество участников: %d\n" +
-                        "Количество переходов в раздел о VPN: %d\n" +
-                        "Количество нажатий кнопки назад: %d\n" +
-                        "Переходов в раздел выбора подписок: %d\n" +
-                        "Переходов в раздел выбора подписок из раздела о VPN: %d\n\n" +
-                        "Количество переходов в подписку\n на 1 месяц: %d\n\n" +
-                        "Количество переходов в подписку\n на 3 месяца: %d\n\n" +
-                        "Количество переходов в подписку\n на 6 месяцев: %d\n\n" +
-                        "Количество переходов в подписку\n на 12 месяцев: %d\n\n" +
-                        "Количество переходов в раздел\n <свой сервер>: %d\n\n" +
-                        "Нажата кнопка <я оплатил> в подписке\n на 1 месяц: %d\n\n" +
-                        "Нажата кнопка <я оплатил> в подписке\n на 3 месяца: %d\n\n" +
-                        "Нажата кнопка <я оплатил> в подписке\n на 6 месяцев: %d\n\n" +
-                        "Нажата кнопка <я оплатил> в подписке\n на 12 месяцев: %d\n\n" +
-                        "Количество успешных продаж: %d\n" +
-                        "Количество неуспешных продаж: %d", getAmountUsersEntry(), getAmountUsers(), getPressAboutVPNButton(),
+        return String.format("\uD83D\uDC4C Всего входов в бота: %d\n" +
+                        "\uD83D\uDC4D Количество участников: %d\n" +
+                        "\uD83E\uDD17 Количество переходов в раздел о VPN: %d\n" +
+                        "\uD83E\uDD14 Количество нажатий кнопки назад: %d\n" +
+                        "\uD83C\uDD7F\uFE0F Переходов в раздел выбора подписок: %d\n" +
+                        "\uD83C\uDD7F\uFE0F Переходов в раздел выбора подписок из раздела о VPN: %d\n\n" +
+                        "♻\uFE0F Количество переходов в подписку\n на 1 месяц: %d\n\n" +
+                        "♻\uFE0F Количество переходов в подписку\n на 3 месяца: %d\n\n" +
+                        "♻\uFE0F Количество переходов в подписку\n на 6 месяцев: %d\n\n" +
+                        "♻\uFE0F Количество переходов в подписку\n на 12 месяцев: %d\n\n" +
+                        "♻\uFE0F Количество переходов в раздел\n <свой сервер>: %d\n\n" +
+                        "✳\uFE0F Нажата кнопка <я оплатил> в подписке\n на 1 месяц: %d\n\n" +
+                        "✳\uFE0F Нажата кнопка <я оплатил> в подписке\n на 3 месяца: %d\n\n" +
+                        "✳\uFE0F Нажата кнопка <я оплатил> в подписке\n на 6 месяцев: %d\n\n" +
+                        "✳\uFE0F Нажата кнопка <я оплатил> в подписке\n на 12 месяцев: %d\n\n" +
+                        "✅ Количество успешных продаж: %d\n" +
+                        "‼\uFE0F Количество неуспешных продаж: %d\n" +
+                        "‼\uFE0F Осталось ключей: %d", getAmountUsersEntry(), getAmountUsers(), getPressAboutVPNButton(),
                 getPressBackButton(), getPressSubButton(), getPressSubFromAboutVPNButton(), getPressSubOneMonthButton(), getPressSubThreeMonthsButton(),
                 getPressSubSixMonthsButton(), getPressSubTwelveMonthsButton(), getPressGetOwnServerButton(), getPressPaidOneMonthButton(),
-                getPressPaidThreeMonthsButton(), getPressPaidSixMonthsButton(), getPressPaidTwelveMonthsButton(), getSuccessPaymentCounter(), getNotSuccessPaymentCounter());
+                getPressPaidThreeMonthsButton(), getPressPaidSixMonthsButton(), getPressPaidTwelveMonthsButton(), getSuccessPaymentCounter(), getNotSuccessPaymentCounter(),
+                getAmountKeys());
     }
 }

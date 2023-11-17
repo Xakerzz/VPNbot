@@ -3,7 +3,8 @@ package com.xakerz.VPNbot;
 public enum CommandsForBot {
 
     START ("/start"),
-    STATISTIC ("Statistic 9764");
+    KEYBOARD ("keyboard"),
+    STATISTIC ("✅Статистика✅");
 
     private String title;
 

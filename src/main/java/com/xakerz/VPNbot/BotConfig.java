@@ -7,6 +7,11 @@ public class BotConfig {
     static private final  long CHAT_ID_CHANEL = -1002123748204L;
     static private final  long CHAT_ID_PAYMENT_CHANEL = -1002133393179L;
     static private final  long CHAT_ID_OTHER_CONTENT_CHANEL = -1002133393179L;
+    static private final  long ADMIN_ID = 809699663L;
+
+    public static long ADMIN_ID () {
+        return ADMIN_ID;
+    }
     public static long getCHAT_ID_OTHER_CONTENT_CHANE () {
         return CHAT_ID_OTHER_CONTENT_CHANEL;
     }
