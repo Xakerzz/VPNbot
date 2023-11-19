@@ -13,6 +13,7 @@ public enum BotButtons {
     PAY_FOR_SIX_MONTH ("Оплатить 1080₽ \uD83D\uDCB3"),
     PAY_FOR_TWELVE_MONTH ("Оплатить 1800₽ \uD83D\uDCB3"),
     GET_OWN_VPN_SERVER ("Заказать свой собственный сервер✅"),
+    ORDER_OWN_VPN_SERVER ("Заказать сервер✅"),
     I_PAID ("Я оплатил \uD83D\uDC4D"),
     BUTTON_NOT_PAYMENT ("⛔\uFE0FОплата не поступила⛔\uFE0F"),
     BUTTON_PAYMENT ("✅Оплата поступила✅");

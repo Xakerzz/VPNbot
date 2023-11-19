@@ -3,10 +3,10 @@ package com.xakerz.VPNbot;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.pinnedmessages.PinChatMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.*;
+import org.telegram.telegrambots.meta.api.objects.games.Animation;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -15,10 +15,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
-
 
 
 @SpringBootApplication
@@ -73,8 +72,10 @@ public class VpNbotApplication extends TelegramLongPollingBot {
             Message message = update.getMessage();
             String userMessage = message.getText();
             setChatId(message.getChatId());
-            if (!DataStorageFoChatId.getInstance().getChatId(getUserName() + "   " + getFirstName()).equals(message.getChatId())) {
-                DataStorage.getInstance().setInfoAboutUser(getChatId(), getUserName() + "   " + getFirstName());
+            if (DataStorageFoChatId.getInstance().getChatId(getUserName() + CommandsForBot.MARK_SPACE.getCommand() + getFirstName()) == null ||
+                    !DataStorageFoChatId.getInstance().getChatId(getUserName() + CommandsForBot.MARK_SPACE.getCommand() + getFirstName()).equals(getChatId())) {
+
+                DataStorage.getInstance().setInfoAboutUser(getChatId(), getUserName() + CommandsForBot.MARK_SPACE.getCommand() + getFirstName());
                 DataStorageFoChatId.getInstance().setChatId(DataStorage.getInstance().getInfoAboutUser(getChatId()), getChatId());
             }
             if (userMessage.equals(CommandsForBot.START.getCommand())) {
@@ -91,6 +92,10 @@ public class VpNbotApplication extends TelegramLongPollingBot {
             } else if (update.hasMessage() && userMessage.equals(CommandsForBot.STATISTIC.getCommand()) && getChatId() == BotConfig.ADMIN_ID()) {
 
                 sendStatisticMessage(BotConfig.getCHAT_ID_CHANEL(), new Statistic().toString());
+            } else if (update.hasMessage() && userMessage.equals(CommandsForBot.GET_LIST_CLIENTS.getCommand()) && getChatId() == BotConfig.ADMIN_ID()) {
+                sendStatisticMessage(BotConfig.getCHAT_ID_CHANEL(), KeysVPN.readDataFromFileToStatistic());
+            } else if (update.hasMessage() && userMessage.equals(CommandsForBot.GET_CLIENT_BASE.getCommand()) && getChatId() == BotConfig.ADMIN_ID()) {
+                sendStatisticMessage(BotConfig.getCHAT_ID_CHANEL(), DataStorage.getBaseClientId());
             }
 
         } else if (update.hasCallbackQuery()) {
@@ -102,12 +107,10 @@ public class VpNbotApplication extends TelegramLongPollingBot {
             int messageId = update.getCallbackQuery().getMessage().getMessageId();
 
             if (callBackData.contains(CallBackForButtons.SUCCESS.getCallBack()) || callBackData.contains(CallBackForButtons.NOT_SUCCESS.getCallBack())) {
-                String[] callBackArray = callBackData.trim().split("   ");
+                String[] callBackArray = callBackData.trim().split(CommandsForBot.MARK_SPACE.getCommand());
                 callBackData = callBackArray[0];
-                setChatId(DataStorageFoChatId.getInstance().getChatId(callBackArray[1] + "   " + callBackArray[2]));
-                System.out.println("into method");
-                System.out.println(callBackArray[1] + " " + callBackArray[2]);
-                System.out.println(getChatId());
+                setChatId(DataStorageFoChatId.getInstance().getChatId(callBackArray[1] + CommandsForBot.MARK_SPACE.getCommand() + callBackArray[2]));
+
             }
 
             if (callBackData.equals(CallBackForButtons.ABOUT_VPN.getCallBack())) {
@@ -242,8 +245,8 @@ public class VpNbotApplication extends TelegramLongPollingBot {
                 Statistic.setPressGetOwnServerButton();
 
                 editMessageText(getChatId(), messageId, Phrases.GET_OWN_VPN_SERVER.getPhrase(),
-                        BotButtons.BACK.getTextButton(), BotButtons.PAY_FOR_ONE_MONTH.getTextButton(),
-                        CallBackForButtons.BACK_TO_MONTH_MENU.getCallBack(), CallBackForButtons.PAY_FOR_OWN_SERVER.getCallBack());
+                        BotButtons.BACK.getTextButton(), BotButtons.ORDER_OWN_VPN_SERVER.getTextButton(),
+                        CallBackForButtons.BACK_TO_MONTH_MENU.getCallBack(), CallBackForButtons.PAY_FOR_OWN_SERVER.getCallBack(), Links.ORDER_SERVER.getLink());
 
                 sendTextMessage(BotConfig.getCHAT_ID_CHANEL(), DataStorage.getInstance().getInfoAboutUser(getChatId()) +
                         BotLogs.ENTER_IN_GET_OWN_SERVER_MENU.getBotLog());
@@ -269,13 +272,14 @@ public class VpNbotApplication extends TelegramLongPollingBot {
 
                 Statistic.setPressPaidOneMonthButton();
                 if (StatusPayment.getStatusPayment(getChatId())) {
+                    sendTextMessage(getChatId(),Phrases.SUCCESS_PAYMENT_AGAIN.getPhrase());
                     sendTextMessage(getChatId(), KeysVPN.getHashMapChatId(getChatId()));
-                }else {
+                } else {
                     messageText(BotConfig.getCHAT_ID_PAYMENT_CHANEL(),
                             Phrases.MESSAGE_PAYMENT.getPhrase() + DataStorage.getInstance().getInfoAboutUser(getChatId()),
                             BotButtons.BUTTON_NOT_PAYMENT.getTextButton(), BotButtons.BUTTON_PAYMENT.getTextButton(),
-                            CallBackForButtons.NOT_SUCCESS.getCallBack() + "   " + DataStorage.getInstance().getInfoAboutUser(getChatId()),
-                            CallBackForButtons.SUCCESS.getCallBack() + "   " + DataStorage.getInstance().getInfoAboutUser(getChatId()));
+                            CallBackForButtons.NOT_SUCCESS.getCallBack() + CommandsForBot.MARK_SPACE.getCommand() + DataStorage.getInstance().getInfoAboutUser(getChatId()),
+                            CallBackForButtons.SUCCESS.getCallBack() + CommandsForBot.MARK_SPACE.getCommand() + DataStorage.getInstance().getInfoAboutUser(getChatId()));
                 }
 
                 sendTextMessage(BotConfig.getCHAT_ID_CHANEL(), DataStorage.getInstance().getInfoAboutUser(getChatId()) +
@@ -289,13 +293,14 @@ public class VpNbotApplication extends TelegramLongPollingBot {
 
                 Statistic.setPressPaidThreeMonthsButton();
                 if (StatusPayment.getStatusPayment(getChatId())) {
+                    sendTextMessage(getChatId(),Phrases.SUCCESS_PAYMENT_AGAIN.getPhrase());
                     sendTextMessage(getChatId(), KeysVPN.getHashMapChatId(getChatId()));
-                }else {
+                } else {
                     messageText(BotConfig.getCHAT_ID_PAYMENT_CHANEL(),
                             Phrases.MESSAGE_PAYMENT.getPhrase() + DataStorage.getInstance().getInfoAboutUser(getChatId()),
                             BotButtons.BUTTON_NOT_PAYMENT.getTextButton(), BotButtons.BUTTON_PAYMENT.getTextButton(),
-                            CallBackForButtons.NOT_SUCCESS.getCallBack() + "   " + DataStorage.getInstance().getInfoAboutUser(getChatId()),
-                            CallBackForButtons.SUCCESS.getCallBack() + "   " + DataStorage.getInstance().getInfoAboutUser(getChatId()));
+                            CallBackForButtons.NOT_SUCCESS.getCallBack() + CommandsForBot.MARK_SPACE.getCommand() + DataStorage.getInstance().getInfoAboutUser(getChatId()),
+                            CallBackForButtons.SUCCESS.getCallBack() + CommandsForBot.MARK_SPACE.getCommand() + DataStorage.getInstance().getInfoAboutUser(getChatId()));
                 }
 
                 sendTextMessage(BotConfig.getCHAT_ID_CHANEL(), DataStorage.getInstance().getInfoAboutUser(getChatId()) +
@@ -309,13 +314,14 @@ public class VpNbotApplication extends TelegramLongPollingBot {
 
                 Statistic.setPressPaidSixMonthsButton();
                 if (StatusPayment.getStatusPayment(getChatId())) {
+                    sendTextMessage(getChatId(),Phrases.SUCCESS_PAYMENT_AGAIN.getPhrase());
                     sendTextMessage(getChatId(), KeysVPN.getHashMapChatId(getChatId()));
-                }else {
+                } else {
                     messageText(BotConfig.getCHAT_ID_PAYMENT_CHANEL(),
                             Phrases.MESSAGE_PAYMENT.getPhrase() + DataStorage.getInstance().getInfoAboutUser(getChatId()),
                             BotButtons.BUTTON_NOT_PAYMENT.getTextButton(), BotButtons.BUTTON_PAYMENT.getTextButton(),
-                            CallBackForButtons.NOT_SUCCESS.getCallBack() + "   " + DataStorage.getInstance().getInfoAboutUser(getChatId()),
-                            CallBackForButtons.SUCCESS.getCallBack() + "   " + DataStorage.getInstance().getInfoAboutUser(getChatId()));
+                            CallBackForButtons.NOT_SUCCESS.getCallBack() + CommandsForBot.MARK_SPACE.getCommand() + DataStorage.getInstance().getInfoAboutUser(getChatId()),
+                            CallBackForButtons.SUCCESS.getCallBack() + CommandsForBot.MARK_SPACE.getCommand() + DataStorage.getInstance().getInfoAboutUser(getChatId()));
                 }
 
                 sendTextMessage(BotConfig.getCHAT_ID_CHANEL(), DataStorage.getInstance().getInfoAboutUser(getChatId()) +
@@ -328,13 +334,14 @@ public class VpNbotApplication extends TelegramLongPollingBot {
 
                 Statistic.setPressPaidTwelveMonthsButton();
                 if (StatusPayment.getStatusPayment(getChatId())) {
+                    sendTextMessage(getChatId(),Phrases.SUCCESS_PAYMENT_AGAIN.getPhrase());
                     sendTextMessage(getChatId(), KeysVPN.getHashMapChatId(getChatId()));
-                }else {
+                } else {
                     messageText(BotConfig.getCHAT_ID_PAYMENT_CHANEL(),
                             Phrases.MESSAGE_PAYMENT.getPhrase() + DataStorage.getInstance().getInfoAboutUser(getChatId()),
                             BotButtons.BUTTON_NOT_PAYMENT.getTextButton(), BotButtons.BUTTON_PAYMENT.getTextButton(),
-                            CallBackForButtons.NOT_SUCCESS.getCallBack() + "   " + DataStorage.getInstance().getInfoAboutUser(getChatId()),
-                            CallBackForButtons.SUCCESS.getCallBack() + "   " + DataStorage.getInstance().getInfoAboutUser(getChatId()));
+                            CallBackForButtons.NOT_SUCCESS.getCallBack() + CommandsForBot.MARK_SPACE.getCommand() + DataStorage.getInstance().getInfoAboutUser(getChatId()),
+                            CallBackForButtons.SUCCESS.getCallBack() + CommandsForBot.MARK_SPACE.getCommand() + DataStorage.getInstance().getInfoAboutUser(getChatId()));
                 }
 
                 sendTextMessage(BotConfig.getCHAT_ID_CHANEL(), DataStorage.getInstance().getInfoAboutUser(getChatId()) +
@@ -353,61 +360,194 @@ public class VpNbotApplication extends TelegramLongPollingBot {
 
                 Statistic.setSuccessPaymentCounter();
                 if (!StatusPayment.getStatusPayment(getChatId())) {
-
+                    sendTextMessage(getChatId(), Phrases.SUCCESS_PAYMENT.getPhrase());
                     KeysVPN.setHashMapChatId(getChatId());
                     KeysVPN.putChatIdToFile(getChatId(), KeysVPN.getHashMapChatId(getChatId()));
                     sendTextMessage(getChatId(), KeysVPN.getHashMapChatId(getChatId()));
                     StatusPayment.setStatusPayment(getChatId(), true);
                     StatusPayment.putChatIdToFile(chatId, true);
+                    sendTextMessage(getChatId(), Phrases.MESSAGE_AFTER_SUCCESS_PAYMENT.getPhrase());
 
                 }
             }
-
         }
-            if (update.hasMessage() && update.getMessage().hasPhoto() && !StatusPayment.getStatusPayment(update.getMessage().getChatId())) {
-                Message message = update.getMessage();
-                List<PhotoSize> photos = message.getPhoto();
 
-                getPhoto(photos, update);
+         if (update.hasMessage() && update.getMessage().hasLocation()) {
 
-            }
+            sendLocationToOtherChanel(update);
+        } else if (update.hasMessage() && update.getMessage().hasPhoto() && getChatId() != BotConfig.ADMIN_ID()) {
+            sendPhotoToOtherChanel(update);
 
-            if (update.hasMessage() && getChatId() == BotConfig.ADMIN_ID() && update.getMessage().getText().equals(CommandsForBot.KEYBOARD.getCommand())) {
-                SendMessage message = new SendMessage();
-                message.setChatId(chatId);
-                message.setText("Keyboard is on ✅");
-                ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-                keyboardMarkup.setOneTimeKeyboard(false); // Можно сделать, чтобы клавиатура скрывалась после нажатия
-                keyboardMarkup.setResizeKeyboard(true);
-                KeyboardRow row = new KeyboardRow();
-                KeyboardButton button = new KeyboardButton("✅Статистика✅");
-                KeyboardButton button2 = new KeyboardButton("Информация");
-                row.add(button);
-                row.add(button2);
-                List<KeyboardRow> keyboardRowList = new ArrayList<>();
-                keyboardRowList.add(row);
-                keyboardMarkup.setKeyboard(keyboardRowList);
-                message.setReplyMarkup(keyboardMarkup);
-                try {
-                    execute(message);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
+        } else if (update.hasMessage() && update.getMessage().hasText() && getChatId() != BotConfig.ADMIN_ID()) {
+            sendTextToOtherChanel(update);
+
+        } else if (update.hasMessage() && update.getMessage().hasVideo()) {
+            sendVideoToOtherChanel(update);
+
+        } else if (update.hasMessage() && update.getMessage().hasAudio()) {
+            sendAudioToOtherChanel(update);
+
+        } else if (update.hasMessage() && update.getMessage().hasAnimation()) {
+            sendAnimationToOtherChanel(update);
+
+        } else if (update.hasMessage() && update.getMessage().hasVoice()) {
+            sendVoiceToOtherChanel(update);
+
+        } else if (update.hasMessage() && update.getMessage().hasVideoNote()) {
+            sendInVideoNoteToOtherChanel(update);
 
         }
 
-            if (update.hasMessage() && getChatId() == BotConfig.ADMIN_ID() && update.getMessage().getText().contains("ss://")) {
-                String[] keysArray = update.getMessage().getText().trim().split("\n");
-                List<String> dataKeys = new ArrayList<>();
-                for (int i = 0; i < keysArray.length; i++) {
-                    dataKeys.add(keysArray[i]);
-                }
-                KeysVPN.putKeyToFile(dataKeys);
-            }
 
 
+        if (update.hasMessage() && update.getMessage().hasPhoto() && !StatusPayment.getStatusPayment(update.getMessage().getChatId())) {
+            Message message = update.getMessage();
+            List<PhotoSize> photos = message.getPhoto();
+
+            getPhoto(photos, update);
+
+        }
+        if (update.hasMessage() && getChatId() == BotConfig.ADMIN_ID() && update.getMessage().getText().equals(CommandsForBot.KEYBOARD.getCommand())) {
+
+            getAdminPanel();
+
+        }
+        if (update.hasMessage() && getChatId() == BotConfig.ADMIN_ID() && update.getMessage().getText().contains(CommandsForBot.MARK_SS.getCommand())) {
+            String[] keysArray = update.getMessage().getText().trim().split("\n");
+            List<String> dataKeys = new ArrayList<>(Arrays.asList(keysArray));
+            KeysVPN.putKeyToFile(dataKeys);
+        }
+    }
+
+    private void sendInVideoNoteToOtherChanel(Update update) {
+        VideoNote videoNote = update.getMessage().getVideoNote();
+        SendVideoNote sendVideoNote = new SendVideoNote();
+        sendVideoNote.setChatId(BotConfig.getCHAT_ID_OTHER_CONTENT_CHANE());
+        InputFile inputFile = new InputFile(videoNote.getFileId());
+        sendVideoNote.setVideoNote(inputFile);
+        sendTextMessage(BotConfig.getCHAT_ID_OTHER_CONTENT_CHANE(), update.getMessage().getChatId() + "   " + DataStorage.getInstance().getInfoAboutUser(update.getMessage().getChatId()));
+
+        try {
+
+            execute(sendVideoNote);
 
 
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendVoiceToOtherChanel(Update update) {
+        Voice voice = update.getMessage().getVoice();
+        SendVoice sendVoice = new SendVoice();
+        sendVoice.setCaption(update.getMessage().getChatId() + "   " + DataStorage.getInstance().getInfoAboutUser(update.getMessage().getChatId()));
+        sendVoice.setChatId(BotConfig.getCHAT_ID_OTHER_CONTENT_CHANE());
+        InputFile inputFile = new InputFile(voice.getFileId());
+        sendVoice.setVoice(inputFile);
+
+        try {
+
+            execute(sendVoice);
+
+
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendAnimationToOtherChanel(Update update) {
+        Animation animation = update.getMessage().getAnimation();
+        SendAnimation sendAnimation = new SendAnimation();
+        sendAnimation.setCaption(update.getMessage().getChatId() + "   " + DataStorage.getInstance().getInfoAboutUser(update.getMessage().getChatId()));
+        sendAnimation.setChatId(BotConfig.getCHAT_ID_OTHER_CONTENT_CHANE());
+        InputFile inputFile = new InputFile(animation.getFileId());
+        sendAnimation.setAnimation(inputFile);
+
+        try {
+
+            execute(sendAnimation);
+
+
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendAudioToOtherChanel(Update update) {
+        Audio audio = update.getMessage().getAudio();
+        SendAudio sendAudio = new SendAudio();
+        sendAudio.setCaption(update.getMessage().getChatId() + "   " + DataStorage.getInstance().getInfoAboutUser(update.getMessage().getChatId()));
+        sendAudio.setChatId(BotConfig.getCHAT_ID_OTHER_CONTENT_CHANE());
+        InputFile inputFile = new InputFile(audio.getFileId());
+        sendAudio.setAudio(inputFile);
+
+        try {
+
+            execute(sendAudio);
+
+
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendVideoToOtherChanel(Update update) {
+        Video video = update.getMessage().getVideo();
+        SendVideo sendVideo = new SendVideo();
+        sendVideo.setCaption(update.getMessage().getChatId() + "   " + DataStorage.getInstance().getInfoAboutUser(update.getMessage().getChatId()));
+        sendVideo.setChatId(BotConfig.getCHAT_ID_OTHER_CONTENT_CHANE());
+        InputFile inputFile = new InputFile(video.getFileId());
+        sendVideo.setVideo(inputFile);
+
+        try {
+
+            execute(sendVideo);
+
+
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendTextToOtherChanel(Update update) {
+        sendTextMessage(BotConfig.getCHAT_ID_OTHER_CONTENT_CHANE(), update.getMessage().getChatId() + "   "
+                + DataStorage.getInstance().getInfoAboutUser(update.getMessage().getChatId()));
+        sendTextMessage(BotConfig.getCHAT_ID_OTHER_CONTENT_CHANE(), update.getMessage().getText());
+    }
+
+    private void sendPhotoToOtherChanel(Update update) {
+        Message message = update.getMessage();
+        List<PhotoSize> photos = message.getPhoto();
+        PhotoSize photo = photos.stream()
+                .max(Comparator.comparing(PhotoSize::getFileSize))
+                .orElse(null);
+        if (update.getMessage().hasText()) {
+            sendTextMessage(BotConfig.getCHAT_ID_PAYMENT_CHANEL(), update.getMessage().getText());
+        }
+        if (photo != null) {
+            String fileId = photos.get(photos.size() - 1).getFileId();
+            sendTextMessage(BotConfig.getCHAT_ID_OTHER_CONTENT_CHANE(), DataStorage.getInstance().getInfoAboutUser(update.getMessage().getChatId()));
+            sendPhotoMessage(BotConfig.getCHAT_ID_OTHER_CONTENT_CHANE(), fileId);
+
+        }
+    }
+
+    private void sendLocationToOtherChanel(Update update) {
+        Location location = update.getMessage().getLocation();
+        SendLocation sendLocation = new SendLocation();
+        sendLocation.setChatId(BotConfig.getCHAT_ID_OTHER_CONTENT_CHANE());
+        sendLocation.setLatitude(location.getLatitude());
+        sendLocation.setLongitude(location.getLongitude());
+        sendTextMessage(BotConfig.getCHAT_ID_OTHER_CONTENT_CHANE(), update.getMessage().getChatId() + "   "
+                + DataStorage.getInstance().getInfoAboutUser(update.getMessage().getChatId()));
+        try {
+
+            execute(sendLocation);
+
+
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -419,6 +559,33 @@ public class VpNbotApplication extends TelegramLongPollingBot {
     @Override
     public String getBotToken() {
         return BotConfig.getBOT_TOKEN();
+    }
+
+    private void getAdminPanel() {
+        SendMessage message = new SendMessage();
+        message.setChatId(BotConfig.ADMIN_ID());
+        message.setText(Phrases.KEYBOARD_IS_ON.getPhrase());
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setOneTimeKeyboard(false);
+        keyboardMarkup.setResizeKeyboard(true);
+        KeyboardRow row = new KeyboardRow();
+        KeyboardRow row2 = new KeyboardRow();
+        KeyboardButton button = new KeyboardButton(CommandsForBot.GET_STATISTIC.getCommand());
+        KeyboardButton button2 = new KeyboardButton(CommandsForBot.GET_LIST_CLIENTS.getCommand());
+        KeyboardButton button3 = new KeyboardButton(CommandsForBot.GET_CLIENT_BASE.getCommand());
+        row.add(button);
+        row.add(button2);
+        row2.add(button3);
+        List<KeyboardRow> keyboardRowList = new ArrayList<>();
+        keyboardRowList.add(row);
+        keyboardRowList.add(row2);
+        keyboardMarkup.setKeyboard(keyboardRowList);
+        message.setReplyMarkup(keyboardMarkup);
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            sendStatisticMessage(BotConfig.getCHAT_ID_CHANEL(), e.getMessage());
+        }
     }
 
     private void sendTextMessage(long chatId, String textMessage) {
@@ -458,7 +625,7 @@ public class VpNbotApplication extends TelegramLongPollingBot {
         }
         if (photo != null) {
             String fileId = photos.get(photos.size() - 1).getFileId();
-
+            sendTextMessage(BotConfig.getCHAT_ID_PAYMENT_CHANEL(), DataStorage.getInstance().getInfoAboutUser(update.getMessage().getChatId()));
             sendPhotoMessage(BotConfig.getCHAT_ID_PAYMENT_CHANEL(), fileId);
 
         }
@@ -505,6 +672,7 @@ public class VpNbotApplication extends TelegramLongPollingBot {
             throw new RuntimeException(e.getMessage());
         }
     }
+
 
     private void editMessageText(Long chatId, Integer messageId, String newTextForMessage, String newTextForButtonOne, String newTextForButtonTwo, String newTextForButtonThree, String newTextForCallbackOne, String newTextForCallbackTwo, String newTextForCallbackThree, String url) {
 
@@ -628,6 +796,7 @@ public class VpNbotApplication extends TelegramLongPollingBot {
         markup.setKeyboard(keyboard);
         return markup;
     }
+
 
     private InlineKeyboardMarkup getInlineKeyboard(String newTextForButtonOne, String newTextForButtonTwo, String newTextForButtonThree, String newTextForButtonFour, String newTextForButtonFive, String newTextForButtonSix, String newTextForCallbackOne, String newTextForCallbackTwo, String newTextForCallbackThree, String newTextForCallbackFour, String newTextForCallbackFive, String newTextForCallbackSix) {
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();

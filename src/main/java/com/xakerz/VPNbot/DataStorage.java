@@ -1,8 +1,6 @@
 package com.xakerz.VPNbot;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +45,27 @@ public class DataStorage {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getBaseClientId() {
+        StringBuilder message = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(CHAT_ID_BASE))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+
+
+                assert message != null;
+                message.append(line + "\n");
+
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String outMessage = message.toString();
+        return outMessage;
     }
 
 

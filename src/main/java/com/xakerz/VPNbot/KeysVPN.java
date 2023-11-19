@@ -1,10 +1,7 @@
 package com.xakerz.VPNbot;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class KeysVPN {
     private static final KeysVPN instance = new KeysVPN();
@@ -77,6 +74,26 @@ public class KeysVPN {
 
     }
 
+    public static String  readDataFromFileToStatistic() {
+        StringBuilder message = null;
+        try (BufferedReader br = new BufferedReader(new FileReader(KEYS_ID))) {
+            message = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] temp = line.split("   ");
+
+                String[] info = DataStorage.getInstance().getInfoAboutUser(Long.parseLong(temp[0])).split("   ");
+
+                message.append(info[0]).append("   ").append(info[1]).append("   ").append(temp[0]).append("\n").append(temp[1]);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String outMessage = message.toString();
+        return outMessage;
+
+    }
+
     public static void setHashMapChatId(long chatId) {
        keysMap.put(chatId, dataKeys.get(dataKeys.size() - 1).trim());
        dataKeys.remove(dataKeys.size() - 1);
@@ -92,15 +109,16 @@ public class KeysVPN {
 
     }
 
-    public static void putKeyToFile(List<String> dataKeys) {
+    public static void putKeyToFile(List<String> dataKey) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(KEYS_BASE, true))) {
 
-            for (String ithem:dataKeys) {
+            for (String ithem:dataKey) {
 
                 writer.write(ithem);
                 writer.println();
 
             }
+           dataKeys.addAll(dataKey);
 
         } catch (IOException e) {
             e.printStackTrace();
