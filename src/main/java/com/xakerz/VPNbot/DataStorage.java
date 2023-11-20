@@ -64,8 +64,7 @@ public class DataStorage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String outMessage = message.toString();
-        return outMessage;
+        return message.toString();
     }
 
 
