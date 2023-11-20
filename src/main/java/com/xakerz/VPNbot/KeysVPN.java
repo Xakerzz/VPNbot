@@ -8,8 +8,8 @@ public class KeysVPN {
     private static final Map<Long, String> keysMap = new HashMap<>();
 
     private static final List<String> dataKeys = new ArrayList<>();
-    private static final String KEYS_BASE = "root/VPNBOT/Keys.txt";
-    private static final String KEYS_ID = "root/VPNBOT/KeysId.txt";
+    private static final String KEYS_BASE = "root/Keys.txt";
+    private static final String KEYS_ID = "root/KeysId.txt";
 
     public static KeysVPN getInstance() {
         return instance;

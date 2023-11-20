@@ -8,7 +8,7 @@ public class StatusPayment {
     private static final StatusPayment instance = new StatusPayment();
     private static final Map<Long, Boolean> statusPayment = new HashMap<>();
 
-    private static final String STATUS_PAYMENT_BASE = "root/VPNBOT/StatusPayment.txt";
+    private static final String STATUS_PAYMENT_BASE = "root/StatusPayment.txt";
 
     private StatusPayment() {
     }

@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ToLog {
-    private static final String LOG_FILE = "root/VPNBOT/Log.txt";
+    private static final String LOG_FILE = "root/Log.txt";
 
     public static void log(String message, Long chatId, String userNameFirstName) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(LOG_FILE, true))) {
