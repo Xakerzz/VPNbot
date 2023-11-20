@@ -58,7 +58,8 @@ public class VpNbotApplication extends TelegramLongPollingBot {
 
         if (update.hasMessage() && update.getMessage().hasText()) {
 
-            System.out.println(System.getProperty("user.dir"));
+
+            sendTextMessage(getChatId(), System.getProperty("user.dir"));
             Statistic.setAmountUsersEntry();
 
 
