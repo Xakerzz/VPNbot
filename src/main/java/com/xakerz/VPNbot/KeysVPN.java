@@ -9,7 +9,7 @@ public class KeysVPN {
 
     private static final List<String> dataKeys = new ArrayList<>();
     private static final String KEYS_BASE = "src/main/resources/Files/Keys.txt";
-    private static final String KEYS_ID = "src/main/resources/Files/KeysId.txt";
+    private static final String KEYS_ID = "root/VPNbot/KeysId.txt";
 
     public static KeysVPN getInstance() {
         return instance;
