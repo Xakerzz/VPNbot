@@ -12,8 +12,8 @@ public class KeysVPN {
     private static final Map<Long, String> keysMap = new HashMap<>();
 
     private static final List<String> dataKeys = new ArrayList<>();
-    private static final String KEYS_BASE = Paths.get("").toAbsolutePath() + "out/artifacts/VPNbot_jar/Keys.txt";
-    private static final String KEYS_ID = Paths.get("").toAbsolutePath() + "out/artifacts/VPNbot_jar/KeysId.txt";
+    private static final String KEYS_BASE = Paths.get("").toAbsolutePath() + "/out/artifacts/VPNbot_jar/Keys.txt";
+    private static final String KEYS_ID = Paths.get("").toAbsolutePath() + "/out/artifacts/VPNbot_jar/KeysId.txt";
 
     public static KeysVPN getInstance() {
         return instance;
