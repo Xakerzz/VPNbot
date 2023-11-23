@@ -17,8 +17,7 @@ public class Main {
         setHashMapStatusPayment();
         DataStorage.setHashMapChatId();
         KeysVPN.readDataFromFile();
-        Path currentPath = Paths.get("").toAbsolutePath();
-        System.out.println("Текущая рабочая директория Main: " + currentPath);
+
 
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
