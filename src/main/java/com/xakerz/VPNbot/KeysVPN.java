@@ -1,23 +1,25 @@
 package com.xakerz.VPNbot;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class KeysVPN {
     private static final KeysVPN instance = new KeysVPN();
     private static final Map<Long, String> keysMap = new HashMap<>();
 
     private static final List<String> dataKeys = new ArrayList<>();
-    private static final String KEYS_BASE = "/root/VPNbot/VPNbot/src/main/resources/Files/Keys.txt";
-    private static final String KEYS_ID = "/root/VPNbot/VPNbot/src/main/resources/Files/KeysId.txt";
+    private static final String KEYS_BASE = Paths.get("").toAbsolutePath() + "out/artifacts/VPNbot_jar/Keys.txt";
+    private static final String KEYS_ID = Paths.get("").toAbsolutePath() + "out/artifacts/VPNbot_jar/KeysId.txt";
 
     public static KeysVPN getInstance() {
         return instance;
     }
 
-    public static Integer getAmountListKeys () {
+    public static Integer getAmountListKeys() {
         return dataKeys.size();
     }
 
@@ -44,7 +46,6 @@ public class KeysVPN {
 
 
                         setKeyToMap(chatId, key);
-
 
 
                     } catch (NumberFormatException e) {
@@ -77,7 +78,7 @@ public class KeysVPN {
 
     }
 
-    public static String  readDataFromFileToStatistic() {
+    public static String readDataFromFileToStatistic() {
         StringBuilder message = null;
         try (BufferedReader br = new BufferedReader(new FileReader(KEYS_ID))) {
             message = new StringBuilder();
@@ -98,8 +99,8 @@ public class KeysVPN {
     }
 
     public static void setHashMapChatId(long chatId) {
-       keysMap.put(chatId, dataKeys.get(dataKeys.size() - 1).trim());
-       dataKeys.remove(dataKeys.size() - 1);
+        keysMap.put(chatId, dataKeys.get(dataKeys.size() - 1).trim());
+        dataKeys.remove(dataKeys.size() - 1);
 
 
         reWriteFile();
@@ -115,13 +116,13 @@ public class KeysVPN {
     public static void putKeyToFile(List<String> dataKey) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(KEYS_BASE, true))) {
 
-            for (String ithem:dataKey) {
+            for (String ithem : dataKey) {
 
                 writer.write(ithem);
                 writer.println();
 
             }
-           dataKeys.addAll(dataKey);
+            dataKeys.addAll(dataKey);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -130,7 +131,7 @@ public class KeysVPN {
 
     public static void reWriteFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(KEYS_BASE))) {
-            for (String ithem:dataKeys) {
+            for (String ithem : dataKeys) {
 
                 writer.write(ithem + "\n");
 

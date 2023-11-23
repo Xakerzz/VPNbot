@@ -1,13 +1,14 @@
 package com.xakerz.VPNbot;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DataStorage {
     private static final DataStorage instance = new DataStorage();
     private static final Map<Long, String> infoAboutUser = new HashMap<>();
-    private static final String CHAT_ID_BASE = "/root/VPNbot/VPNbot/src/main/resources/Files/DataBase.txt";
+    private static final String CHAT_ID_BASE = Paths.get("").toAbsolutePath() + "/src/main/resources/Files/DataBase.txt";
 
     public static void putChatIdToFile(Long chatId, String userNameFirstName) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(CHAT_ID_BASE, true))) {

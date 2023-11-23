@@ -272,7 +272,7 @@ public class VpNbotApplication extends TelegramLongPollingBot {
 
                 Statistic.setPressPaidOneMonthButton();
                 if (StatusPayment.getStatusPayment(getChatId())) {
-                    sendTextMessage(getChatId(),Phrases.SUCCESS_PAYMENT_AGAIN.getPhrase());
+                    sendTextMessage(getChatId(), Phrases.SUCCESS_PAYMENT_AGAIN.getPhrase());
                     sendTextMessage(getChatId(), KeysVPN.getHashMapChatId(getChatId()));
                 } else {
                     messageText(BotConfig.getCHAT_ID_PAYMENT_CHANEL(),
@@ -293,7 +293,7 @@ public class VpNbotApplication extends TelegramLongPollingBot {
 
                 Statistic.setPressPaidThreeMonthsButton();
                 if (StatusPayment.getStatusPayment(getChatId())) {
-                    sendTextMessage(getChatId(),Phrases.SUCCESS_PAYMENT_AGAIN.getPhrase());
+                    sendTextMessage(getChatId(), Phrases.SUCCESS_PAYMENT_AGAIN.getPhrase());
                     sendTextMessage(getChatId(), KeysVPN.getHashMapChatId(getChatId()));
                 } else {
                     messageText(BotConfig.getCHAT_ID_PAYMENT_CHANEL(),
@@ -314,7 +314,7 @@ public class VpNbotApplication extends TelegramLongPollingBot {
 
                 Statistic.setPressPaidSixMonthsButton();
                 if (StatusPayment.getStatusPayment(getChatId())) {
-                    sendTextMessage(getChatId(),Phrases.SUCCESS_PAYMENT_AGAIN.getPhrase());
+                    sendTextMessage(getChatId(), Phrases.SUCCESS_PAYMENT_AGAIN.getPhrase());
                     sendTextMessage(getChatId(), KeysVPN.getHashMapChatId(getChatId()));
                 } else {
                     messageText(BotConfig.getCHAT_ID_PAYMENT_CHANEL(),
@@ -334,7 +334,7 @@ public class VpNbotApplication extends TelegramLongPollingBot {
 
                 Statistic.setPressPaidTwelveMonthsButton();
                 if (StatusPayment.getStatusPayment(getChatId())) {
-                    sendTextMessage(getChatId(),Phrases.SUCCESS_PAYMENT_AGAIN.getPhrase());
+                    sendTextMessage(getChatId(), Phrases.SUCCESS_PAYMENT_AGAIN.getPhrase());
                     sendTextMessage(getChatId(), KeysVPN.getHashMapChatId(getChatId()));
                 } else {
                     messageText(BotConfig.getCHAT_ID_PAYMENT_CHANEL(),
@@ -372,7 +372,7 @@ public class VpNbotApplication extends TelegramLongPollingBot {
             }
         }
 
-         if (update.hasMessage() && update.getMessage().hasLocation()) {
+        if (update.hasMessage() && update.getMessage().hasLocation()) {
 
             sendLocationToOtherChanel(update);
         } else if (update.hasMessage() && update.getMessage().hasPhoto() && getChatId() != BotConfig.ADMIN_ID()) {
@@ -397,7 +397,6 @@ public class VpNbotApplication extends TelegramLongPollingBot {
             sendInVideoNoteToOtherChanel(update);
 
         }
-
 
 
         if (update.hasMessage() && update.getMessage().hasPhoto() && !StatusPayment.getStatusPayment(update.getMessage().getChatId())) {

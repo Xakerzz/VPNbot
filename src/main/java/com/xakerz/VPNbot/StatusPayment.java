@@ -1,6 +1,7 @@
 package com.xakerz.VPNbot;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ public class StatusPayment {
     private static final StatusPayment instance = new StatusPayment();
     private static final Map<Long, Boolean> statusPayment = new HashMap<>();
 
-    private static final String STATUS_PAYMENT_BASE = "/root/VPNbot/VPNbot/src/main/resources/Files/StatusPayment.txt";
+    private static final String STATUS_PAYMENT_BASE = Paths.get("").toAbsolutePath() +"/out/artifacts/VPNbot_jar/StatusPayment.txt";
 
     private StatusPayment() {
     }
