@@ -58,8 +58,7 @@ public class KeysVPN {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Path currentPath = Paths.get("").toAbsolutePath();
-        System.out.println("Текущая рабочая директория Keys: " + currentPath);
+
     }
 
     private static void setKeyToMap(long chatId, String key) {
