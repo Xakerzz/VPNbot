@@ -8,7 +8,7 @@ import java.util.Map;
 public class DataStorage {
     private static final DataStorage instance = new DataStorage();
     private static final Map<Long, String> infoAboutUser = new HashMap<>();
-    private static final String CHAT_ID_BASE = Paths.get("").toAbsolutePath() + "/out/artifacts/VPNbot_jar/DataBase.txt";
+    private static final String CHAT_ID_BASE = Paths.get("").toAbsolutePath() + "/VPNbot/out/artifacts/VPNbot_jar/DataBase.txt";
 
     public static void putChatIdToFile(Long chatId, String userNameFirstName) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(CHAT_ID_BASE, true))) {
