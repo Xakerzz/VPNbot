@@ -1,6 +1,8 @@
 package com.xakerz.VPNbot;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class KeysVPN {
@@ -8,8 +10,8 @@ public class KeysVPN {
     private static final Map<Long, String> keysMap = new HashMap<>();
 
     private static final List<String> dataKeys = new ArrayList<>();
-    private static final String KEYS_BASE = "root/Keys.txt";
-    private static final String KEYS_ID = "root/KeysId.txt";
+    private static final String KEYS_BASE = "src/main/resources/Files/Keys.txt";
+    private static final String KEYS_ID = "src/main/resources/Files/KeysId.txt";
 
     public static KeysVPN getInstance() {
         return instance;
@@ -56,6 +58,8 @@ public class KeysVPN {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Path currentPath = Paths.get("").toAbsolutePath();
+        System.out.println("Текущая рабочая директория Keys: " + currentPath);
     }
 
     private static void setKeyToMap(long chatId, String key) {
