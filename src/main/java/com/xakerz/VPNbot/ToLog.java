@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ToLog {
-    private static final String LOG_FILE = Paths.get("").toAbsolutePath() + "/VPNbot/out/artifacts/VPNbot_jar/Log.txt";
+    private static final String LOG_FILE = Paths.get("").toAbsolutePath() + "/VPNbot/VPNbot/out/artifacts/VPNbot_jar/Log.txt";
 
     public static void log(String message, Long chatId, String userNameFirstName) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(LOG_FILE, true))) {
