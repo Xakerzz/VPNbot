@@ -2,10 +2,7 @@ package com.xakerz.VPNbot;
 
 import java.io.*;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class KeysVPN {
     private static final KeysVPN instance = new KeysVPN();
@@ -13,7 +10,9 @@ public class KeysVPN {
 
     private static final List<String> dataKeys = new ArrayList<>();
     private static final String KEYS_BASE = Paths.get("").toAbsolutePath() + "/VPNbot/VPNbot/out/artifacts/VPNbot_jar/Keys.txt";
+    //private static final String KEYS_BASE = "src/main/resources/Files/Keys.txt";
     private static final String KEYS_ID = Paths.get("").toAbsolutePath() + "/VPNbot/VPNbot/out/artifacts/VPNbot_jar/KeysId.txt";
+    //private static final String KEYS_ID = "src/main/resources/Files/KeysId.txt";
 
     public static KeysVPN getInstance() {
         return instance;
@@ -79,22 +78,58 @@ public class KeysVPN {
     }
 
     public static String readDataFromFileToStatistic() {
-        StringBuilder message = null;
+        StringBuilder  message = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(KEYS_ID))) {
-            message = new StringBuilder();
+
             String line;
             while ((line = br.readLine()) != null) {
                 String[] temp = line.split("   ");
 
                 String[] info = DataStorage.getInstance().getInfoAboutUser(Long.parseLong(temp[0])).split("   ");
 
-                message.append(info[0]).append("   ").append(info[1]).append("   ").append(temp[0]).append("\n").append(temp[1]);
+                message.append(info[0]).append("   ").append(info[1]).append("   ").append(temp[0]).append("\n").append(temp[1]).append("\n\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return message.toString();
+
+    }
+
+    public static String readKeysFromFileToSend() {
+        StringBuilder message = null;
+        int counter = 1;
+        try (BufferedReader br = new BufferedReader(new FileReader(KEYS_BASE))) {
+            message = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+
+
+                message.append(counter + ":" + CommandsForBot.MARK_SPACE.getCommand() + line + "\n\n");
+                counter++;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         String outMessage = message.toString();
         return outMessage;
+
+    }
+
+    public static void removeKeysFromFile(String str) {
+
+        String[] keysArray = str.trim().split("\n");
+        List<String> keysToRemove = new ArrayList<>(List.of(keysArray));
+
+        Iterator<String> iterator = dataKeys.iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            if (keysToRemove.contains(key)) {
+                iterator.remove();
+            }
+        }
+        System.out.println("Ключи удалены из базы.");
+        reWriteFile();
 
     }
 

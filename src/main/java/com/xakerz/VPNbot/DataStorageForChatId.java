@@ -3,14 +3,14 @@ package com.xakerz.VPNbot;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataStorageFoChatId {
-    private static final DataStorageFoChatId instance = new DataStorageFoChatId();
+public class DataStorageForChatId {
+    private static final DataStorageForChatId instance = new DataStorageForChatId();
     private static final Map<String, Long> infoAboutUser = new HashMap<>();
 
-    private DataStorageFoChatId() {
+    private DataStorageForChatId() {
     }
 
-    public static DataStorageFoChatId getInstance() {
+    public static DataStorageForChatId getInstance() {
         return instance;
     }
 

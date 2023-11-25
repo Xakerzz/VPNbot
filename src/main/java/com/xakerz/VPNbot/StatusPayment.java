@@ -10,6 +10,7 @@ public class StatusPayment {
     private static final Map<Long, Boolean> statusPayment = new HashMap<>();
 
     private static final String STATUS_PAYMENT_BASE = Paths.get("").toAbsolutePath() +"/VPNbot/VPNbot/out/artifacts/VPNbot_jar/StatusPayment.txt";
+    //private static final String STATUS_PAYMENT_BASE = "src/main/resources/Files/StatusPayment.txt";
 
     private StatusPayment() {
     }

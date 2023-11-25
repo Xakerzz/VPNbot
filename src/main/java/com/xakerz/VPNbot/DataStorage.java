@@ -9,6 +9,7 @@ public class DataStorage {
     private static final DataStorage instance = new DataStorage();
     private static final Map<Long, String> infoAboutUser = new HashMap<>();
     private static final String CHAT_ID_BASE = Paths.get("").toAbsolutePath() + "/VPNbot/VPNbot/out/artifacts/VPNbot_jar/DataBase.txt";
+    //private static final String CHAT_ID_BASE = "src/main/resources/Files/DataBase.txt";
 
     public static void putChatIdToFile(Long chatId, String userNameFirstName) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(CHAT_ID_BASE, true))) {
@@ -18,6 +19,7 @@ public class DataStorage {
             e.printStackTrace();
         }
     }
+
 
     public static void setHashMapChatId() {
         try (BufferedReader reader = new BufferedReader(new FileReader(CHAT_ID_BASE))) {
@@ -32,7 +34,7 @@ public class DataStorage {
                         String userName = parts[1];
                         String firstName = parts[2];
                         DataStorage.infoAboutUser.put(chatId, userName + "   " + firstName);
-                        DataStorageFoChatId.getInstance().setChatId(userName + "   " + firstName, chatId);
+                        DataStorageForChatId.getInstance().setChatId(userName + "   " + firstName, chatId);
 
 
                     } catch (NumberFormatException e) {
